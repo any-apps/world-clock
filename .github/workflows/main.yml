@@ -22,19 +22,18 @@ jobs:
           TARGET_REPO: ${{ secrets.ANY_APPS_HOME_REPO }}
           TARGET_BRANCH: main
           TOKEN: ${{ secrets.ANY_APPS_HOME_TOKEN }}
+          PROJECT_NAME: world-clock
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+          mv public ${PROJECT_NAME}
           mkdir any-apps
-          mv public any-apps/world-clock
-          cd any-apps/world-clock
+          git clone https://x-access-token:${TOKEN}@github.com/${TARGET_REPO}.git  any-apps
+          mv ${PROJECT_NAME} any-apps/public
+          cd any-apps
 
-          git init
-          git remote add origin https://x-access-token:${TOKEN}@github.com/${TARGET_REPO}.git
-          git checkout -b ${TARGET_BRANCH}
-          mkdir world-clock
+          git add public/${PROJECT_NAME}
 
-          git add .
-          git commit -m "DEPLOY WORLD CLOCK"
+          git commit -m "DEPLOY ${PROJECT_NAME} via action"
           git push --force origin ${TARGET_BRANCH}
