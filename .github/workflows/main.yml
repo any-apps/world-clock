@@ -2,8 +2,8 @@ name: Build and Deploy HTML
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - any-apps-*
 
 jobs:
   build-deploy:
