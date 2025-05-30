@@ -3,7 +3,7 @@ name: Build and Deploy HTML
 on:
   push:
     branches:
-      - main  # or your default branch
+      - main
 
 jobs:
   build-deploy:
@@ -15,8 +15,7 @@ jobs:
 
       - name: Install dependencies and build
         run: |
-          npm ci
-          npm run build
+          echo "It should run something to build"
 
       - name: Push build to target repo
         env:
