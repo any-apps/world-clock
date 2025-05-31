@@ -2,12 +2,17 @@ name: Build and Deploy HTML
 
 on:
   push:
-    tags:
-      - any-apps-*
+    branches:
+      - any-apps
 
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
+
+    env:
+      ANY_APPS_HOME_REPO: ${{ secrets.ANY_APPS_HOME_REPO }}
+      ANY_APPS_HOME_TOKEN: ${{ secrets.ANY_APPS_HOME_TOKEN }}
+      PROJECT_NAME: world-clock
 
     steps:
       - name: Checkout source repo
@@ -17,23 +22,33 @@ jobs:
         run: |
           echo "It should run something to build"
 
+      - name: Set deployment branch name
+        id: set_branch
+        run: echo "branch=${{ env.PROJECT_NAME }}${{ github.run_id }}" >> $GITHUB_OUTPUT
+
       - name: Push build to target repo
-        env:
-          TARGET_REPO: ${{ secrets.ANY_APPS_HOME_REPO }}
-          TARGET_BRANCH: main
-          TOKEN: ${{ secrets.ANY_APPS_HOME_TOKEN }}
-          PROJECT_NAME: world-clock
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "${PROJECT_NAME} github-actions[bot]"
+          git config --global user.email "${PROJECT_NAME} github-actions[bot]@users.noreply.github.com"
 
           mv public ${PROJECT_NAME}
           mkdir any-apps
-          git clone https://x-access-token:${TOKEN}@github.com/${TARGET_REPO}.git  any-apps
+          git clone https://x-access-token:${ANY_APPS_HOME_TOKEN}@github.com/${ANY_APPS_HOME_REPO}.git  any-apps
           mv ${PROJECT_NAME} any-apps/public
           cd any-apps
 
+          git checkout -b ${{ steps.set_branch.outputs.branch }}
           git add public/${PROJECT_NAME}
 
           git commit -m "DEPLOY ${PROJECT_NAME} via action"
-          git push --force origin ${TARGET_BRANCH}
+          git push origin ${{ steps.set_branch.outputs.branch }}
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.ANY_APPS_HOME_TOKEN }}
+          repository: ${{ env.ANY_APPS_HOME_REPO }}
+          title: "Deploy ${PROJECT_NAME} ${{ github.run_id }}"
+          body: "Automated PR to deploy HTML content"
+          head: ${{ steps.set_branch.outputs.branch }}
+          base: ${{ env.TARGET_BRANCH }}
