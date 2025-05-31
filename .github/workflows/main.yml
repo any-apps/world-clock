@@ -42,7 +42,7 @@ jobs:
           git add public/${PROJECT_NAME}
 
           git commit -m "DEPLOY ${PROJECT_NAME} via action"
-          git push origin ${{ steps.set_branch.outputs.branch }}
+          git push --force origin ${{ steps.set_branch.outputs.branch }}
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v5
