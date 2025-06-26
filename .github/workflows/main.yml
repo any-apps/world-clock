@@ -13,6 +13,7 @@ jobs:
       ANY_APPS_HOME_REPO: ${{ secrets.ANY_APPS_HOME_REPO }}
       ANY_APPS_HOME_TOKEN: ${{ secrets.ANY_APPS_HOME_TOKEN }}
       PROJECT_NAME: world-clock
+      ANY_APPS_REPO: /tmp/any-apps
 
     steps:
       - name: Checkout source repo
@@ -27,28 +28,42 @@ jobs:
           git config --global user.name "${PROJECT_NAME} github-actions[bot]"
           git config --global user.email "${PROJECT_NAME} github-actions[bot]@users.noreply.github.com"
 
-      - name: Push build to target repo
+      - name: Clone home repo
         run: |
-          mv public ${PROJECT_NAME}
-          mkdir -p any-apps
-          git clone https://x-access-token:${ANY_APPS_HOME_TOKEN}@github.com/${ANY_APPS_HOME_REPO}.git  any-apps
-          rm -vrf any-apps/public/${PROJECT_NAME}
-          mv ${PROJECT_NAME} any-apps/public
-          cd any-apps
+          rm -rf ${ANY_APPS_REPO}
+          mkdir -p ${ANY_APPS_REPO}
+          git clone https://x-access-token:${ANY_APPS_HOME_TOKEN}@github.com/${ANY_APPS_HOME_REPO}.git ${ANY_APPS_REPO}
 
+      - name: Copy build directory to tmp directory
+        run: |
+          mkdir -p /tmp/${PROJECT_NAME}
+          cp -rvf public/* /tmp/${PROJECT_NAME}
+
+      - name: Push build to target repo
+        working-directory: ${{ env.ANY_APPS_REPO }}
+        continue-on-error: true
+        run: |
           git checkout -b ${PROJECT_NAME}
+          git pull origin ${PROJECT_NAME} --force
+          rm -rfv public/${PROJECT_NAME}
+          mv -fv /tmp/${PROJECT_NAME} public/
           git add public/${PROJECT_NAME}
-
           git commit -m "DEPLOY ${PROJECT_NAME} via action"
           git push origin --force ${PROJECT_NAME}
 
-      - name: Create pull request
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.ANY_APPS_HOME_TOKEN }}
-          #repository: ${{ env.ANY_APPS_HOME_REPO }}
-          path: any-apps
-          title: "Deploy ${PROJECT_NAME} ${{ github.run_id }}"
-          body: "Automated PR to deploy HTML content"
-          branch: ${{ env.PROJECT_NAME }}
-          base: main
+      - name: create pull request
+        working-directory: ${{ env.ANY_APPS_REPO }}
+        run: |
+          gh pr create -B main -H ${PROJECT_NAME} --title "Deploy ${PROJECT_NAME}" --body 'Automated PR to deploy html'
+        env:
+          GITHUB_TOKEN: ${{ secrets.ANY_APPS_HOME_TOKEN }}
+
+          #- name: Create pull request
+          #  uses: peter-evans/create-pull-request@v5
+          #  with:
+          #    token: ${{ secrets.ANY_APPS_HOME_TOKEN }}
+          #    path: ${{ env.ANY_APPS_REPO }}
+          #    title: "Deploy ${PROJECT_NAME} ${{ github.run_id }}"
+          #    body: "Automated PR to deploy HTML content"
+          #    branch: ${{ env.PROJECT_NAME }}
+          #    base: main
