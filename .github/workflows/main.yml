@@ -39,6 +39,10 @@ jobs:
           mkdir -p /tmp/${PROJECT_NAME}
           cp -rvf public/* /tmp/${PROJECT_NAME}
 
+      - name: Create branch from tag
+        run: |
+          git checkout -b ${PROJECT_NAME}
+
       - name: Push branch to origin
         run: |
           git push origin ${PROJECT_NAME}
