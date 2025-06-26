@@ -32,6 +32,7 @@ jobs:
           mv public ${PROJECT_NAME}
           mkdir any-apps
           git clone https://x-access-token:${ANY_APPS_HOME_TOKEN}@github.com/${ANY_APPS_HOME_REPO}.git  any-apps
+          rm -vrf any-apps/public/${PROJECT_NAME}
           mv ${PROJECT_NAME} any-apps/public
           cd any-apps
 
