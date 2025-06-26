@@ -56,7 +56,7 @@ jobs:
         # working-directory: ${{ env.ANY_APPS_REPO }}
         uses: peter-evans/create-pull-request@v5
         with:
-          token: ${{ secrets.ANY_APPS_HOME_TOKEN }}
+          token: ${{ env.ANY_APPS_HOME_TOKEN }}
           branch: ${{ github.ref_name }}
           base: main
           title: "Release ${{ github.ref_name }}"
