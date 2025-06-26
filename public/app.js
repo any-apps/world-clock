@@ -29,6 +29,8 @@ const timezones = [
 ];
 
 // Initialize the app
+let is24Hour = getTimeFormatPreference();
+
 document.addEventListener('DOMContentLoaded', function() {
     // Set current year in footer
     document.getElementById('currentYear').textContent = new Date().getFullYear();
@@ -48,17 +50,38 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set up form submission
     document.getElementById('addClockForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        addClock();
+        addClockWrapper();
     });
     
     // Start updating all clocks every second
     setInterval(updateAllClocks, 1000);
+    
+    // Set up time format toggle
+    const toggle = document.getElementById('toggleTimeFormat');
+    if (toggle) {
+        toggle.checked = is24Hour;
+        toggle.addEventListener('change', function() {
+            is24Hour = toggle.checked;
+            setTimeFormatPreference(is24Hour);
+            updateAllClocks();
+        });
+    }
+    
+    // Update button state on load and after add/delete
+    updateAddClockButtonState();
 });
 
 // Add a new clock
 function addClock() {
     const timezoneSelect = document.getElementById('timezone');
     const labelInput = document.getElementById('label');
+    
+    // Limit to 6 clocks
+    const clocks = JSON.parse(localStorage.getItem('worldClocks') || '[]');
+    if (clocks.length >= 6) {
+        alert('You can only add up to 6 clocks.');
+        return;
+    }
     
     const timezone = timezoneSelect.value;
     const label = labelInput.value.trim() || getTimezoneName(timezone);
@@ -104,28 +127,29 @@ function createClockElement(clock) {
     const clocksContainer = document.getElementById('clocksContainer');
     
     const clockElement = document.createElement('div');
-    clockElement.className = 'clock-card bg-white rounded-lg shadow-md p-6 flex flex-col';
+    clockElement.className = 'clock-card p-8 flex flex-col';
     clockElement.id = `clock-${clock.id}`;
     
     clockElement.innerHTML = `
         <div class="flex justify-between items-start mb-2">
-            <h3 class="text-xl font-semibold text-gray-800">${clock.label}</h3>
-            <button class="btn btn-circle btn-sm btn-ghost text-gray-500 hover:text-red-500 delete-clock" data-id="${clock.id}">
+            <h3 class="text-2xl font-bold text-gray-900">${clock.label}</h3>
+            <button class="text-red-400 hover:text-red-600 bg-gray-100 rounded-full p-2 transition delete-clock" data-id="${clock.id}" title="Remove clock">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
         </div>
-        <div class="text-3xl font-bold text-center my-4" id="time-${clock.id}">00:00:00</div>
-        <div class="text-lg text-center text-gray-600" id="date-${clock.id}">January 1, 2023</div>
-        <div class="mt-4 text-sm text-gray-500">${getTimezoneLabel(clock.timezone)}</div>
+        <div class="text-4xl font-extrabold text-gray-800 text-center my-4" id="time-${clock.id}">00:00:00</div>
+        <div class="text-lg text-center text-gray-500" id="date-${clock.id}">January 1, 2023</div>
+        <div class="mt-2 text-sm text-gray-400">${getTimezoneLabel(clock.timezone)}</div>
+        <div class="progress-bar"><div class="progress-bar-inner"></div></div>
     `;
     
     clocksContainer.appendChild(clockElement);
     
     // Add event listener for delete button
     clockElement.querySelector('.delete-clock').addEventListener('click', function() {
-        deleteClock(clock.id);
+        deleteClockWrapper(clock.id);
     });
     
     // Update immediately
@@ -145,7 +169,7 @@ function updateClock(id, timezone) {
     try {
         const options = {
             timeZone: timezone,
-            hour12: false,
+            hour12: !is24Hour,
             hour: '2-digit',
             minute: '2-digit',
             second: '2-digit'
@@ -194,4 +218,34 @@ function getTimezoneName(timezone) {
 function getTimezoneLabel(timezone) {
     const tz = timezones.find(t => t.value === timezone);
     return tz ? tz.label : timezone;
+}
+
+// Preference helpers
+function setTimeFormatPreference(is24) {
+    localStorage.setItem('clockTimeFormat24', is24 ? '1' : '0');
+}
+
+function getTimeFormatPreference() {
+    return localStorage.getItem('clockTimeFormat24') === '1';
+}
+
+// Disable Add Clock button if 6 clocks
+function updateAddClockButtonState() {
+    const btn = document.querySelector('#addClockForm button[type="submit"]');
+    if (!btn) return;
+    const clocks = JSON.parse(localStorage.getItem('worldClocks') || '[]');
+    btn.disabled = clocks.length >= 6;
+    btn.classList.toggle('opacity-50', clocks.length >= 6);
+    btn.classList.toggle('cursor-not-allowed', clocks.length >= 6);
+}
+
+// Update button state on load and after add/delete
+function addClockWrapper() {
+    addClock();
+    updateAddClockButtonState();
+}
+
+function deleteClockWrapper(id) {
+    deleteClock(id);
+    updateAddClockButtonState();
 }
