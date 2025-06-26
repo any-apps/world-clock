@@ -57,3 +57,4 @@ jobs:
           title: "Deploy ${PROJECT_NAME} ${{ github.run_id }}"
           body: "Automated PR to deploy HTML content"
           branch: ${{ env.PROJECT_NAME }}
+          base: main
