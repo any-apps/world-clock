@@ -13,6 +13,7 @@ jobs:
       ANY_APPS_HOME_REPO: ${{ secrets.ANY_APPS_HOME_REPO }}
       ANY_APPS_HOME_TOKEN: ${{ secrets.ANY_APPS_HOME_TOKEN }}
       PROJECT_NAME: world-clock
+      ANY_APP_REPO: /tmp/any-apps
 
     steps:
       - name: Checkout source repo
@@ -29,16 +30,24 @@ jobs:
 
       - name: Push build to target repo
         run: |
-          mv public ${PROJECT_NAME}
-          mkdir -p any-apps
-          git clone https://x-access-token:${ANY_APPS_HOME_TOKEN}@github.com/${ANY_APPS_HOME_REPO}.git  any-apps
-          rm -vrf any-apps/public/${PROJECT_NAME}
-          mv ${PROJECT_NAME} any-apps/public
-          cd any-apps
+          THIS_DIR=$(pwd)
 
+          # clone any-apps repository
+          rm -rf ${ANY_APPS_REPO}
+          mkdir -p ${ANY_APPS_REPO}
+          git clone https://x-access-token:${ANY_APPS_HOME_TOKEN}@github.com/${ANY_APPS_HOME_REPO}.git ${ANY_APPS_REPO}
+          cd ${ANY_APPS_REPO}
           git checkout -b ${PROJECT_NAME}
-          git add public/${PROJECT_NAME}
+          git pull origin ${PROJECT_NAME} --force
 
+          # add world-clock public to any-apps repository
+          cd $THIS_DIR
+          mv public ${PROJECT_NAME}
+          mv ${PROJECT_NAME} ${ANY_APPS_HOME_REPO}/public
+
+          # commit change world-clock public to any-apps repository
+          cd ${ANY_APPS_REPO}
+          git add public/${PROJECT_NAME}
           git commit -m "DEPLOY ${PROJECT_NAME} via action"
           git push origin --force ${PROJECT_NAME}
 
@@ -46,9 +55,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.ANY_APPS_HOME_TOKEN }}
-          #repository: ${{ env.ANY_APPS_HOME_REPO }}
-          path: any-apps
+          path: ${{ env.ANY_APPS_REPO }}
           title: "Deploy ${PROJECT_NAME} ${{ github.run_id }}"
           body: "Automated PR to deploy HTML content"
           branch: ${{ env.PROJECT_NAME }}
-          base: main
