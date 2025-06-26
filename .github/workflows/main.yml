@@ -53,11 +53,18 @@ jobs:
           git push origin --force ${BRANCH_NAME}
 
       - name: create pull request
-        working-directory: ${{ env.ANY_APPS_REPO }}
-        run: |
-          gh pr create -B main -H ${BRANCH_NAME} --title "Deploy ${BRANCH_NAME}" --body 'Automated PR to deploy html'
-        env:
-          GITHUB_TOKEN: ${{ secrets.ANY_APPS_HOME_TOKEN }}
+        # working-directory: ${{ env.ANY_APPS_REPO }}
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref_name }}
+          base: main
+          title: "Release ${{ github.ref_name }}"
+          body: "Automated PR for tag ${{ github.ref_name }}"
+        # run: |
+        #   gh pr create -B main -H ${BRANCH_NAME} --title "Deploy ${BRANCH_NAME}" --body 'Automated PR to deploy html'
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.ANY_APPS_HOME_TOKEN }}
 
           #- name: Create pull request
           #  uses: peter-evans/create-pull-request@v5
