@@ -12,7 +12,7 @@ jobs:
     env:
       ANY_APPS_HOME_REPO: ${{ secrets.ANY_APPS_HOME_REPO }}
       ANY_APPS_HOME_TOKEN: ${{ secrets.ANY_APPS_HOME_TOKEN }}
-      PROJECT_NAME: ${{ github.ref_name }}
+      PROJECT_NAME: world-clock
       ANY_APPS_REPO: /tmp/any-apps
 
     steps:
@@ -38,14 +38,6 @@ jobs:
         run: |
           mkdir -p /tmp/${PROJECT_NAME}
           cp -rvf public/* /tmp/${PROJECT_NAME}
-
-      - name: Create branch from tag
-        run: |
-          git checkout -b ${PROJECT_NAME}
-
-      - name: Push branch to origin
-        run: |
-          git push origin ${PROJECT_NAME}
 
       - name: Push build to target repo
         working-directory: ${{ env.ANY_APPS_REPO }}
