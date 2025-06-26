@@ -45,7 +45,7 @@ jobs:
         continue-on-error: true
         run: |
           git checkout -b ${BRANCH_NAME}
-          git reset --hard ${BRANCH_NAME} --force
+          git reset --hard ${BRANCH_NAME}
           rm -rfv public/${PROJECT_NAME}
           mv -fv /tmp/${PROJECT_NAME} public/
           git add public/${PROJECT_NAME}
