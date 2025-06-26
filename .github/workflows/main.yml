@@ -45,6 +45,7 @@ jobs:
         run: |
           git checkout -b ${PROJECT_NAME}
           git pull origin ${PROJECT_NAME} --force
+          rm -rfv public/${PROJECT_NAME}
           mv -fv /tmp/${PROJECT_NAME} public/
           git add public/${PROJECT_NAME}
           git commit -m "DEPLOY ${PROJECT_NAME} via action"
