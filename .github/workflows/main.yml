@@ -13,7 +13,7 @@ jobs:
       ANY_APPS_HOME_REPO: ${{ secrets.ANY_APPS_HOME_REPO }}
       ANY_APPS_HOME_TOKEN: ${{ secrets.ANY_APPS_HOME_TOKEN }}
       PROJECT_NAME: world-clock
-      BRANCH_NAME: ${{ github.ref_name }}
+      BRANCH_NAME: ${{ github.ref }}
       ANY_APPS_REPO: /tmp/any-apps
 
     steps:
