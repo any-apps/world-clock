@@ -39,6 +39,10 @@ jobs:
           mkdir -p /tmp/${PROJECT_NAME}
           cp -rvf public/* /tmp/${PROJECT_NAME}
 
+      - name: Push branch to origin
+        run: |
+          git push origin ${PROJECT_NAME}
+
       - name: Push build to target repo
         working-directory: ${{ env.ANY_APPS_REPO }}
         continue-on-error: true
@@ -50,9 +54,7 @@ jobs:
           git add public/${PROJECT_NAME}
           git commit -m "DEPLOY ${PROJECT_NAME} via action"
           git push origin --force ${PROJECT_NAME}
-      - name: Push branch to origin
-        run: |
-          git push origin ${PROJECT_NAME}
+
       - name: create pull request
         working-directory: ${{ env.ANY_APPS_REPO }}
         run: |
