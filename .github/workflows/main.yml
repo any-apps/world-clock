@@ -51,12 +51,19 @@ jobs:
           git commit -m "DEPLOY ${PROJECT_NAME} via action"
           git push origin --force ${PROJECT_NAME}
 
-      - name: Create pull request
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.ANY_APPS_HOME_TOKEN }}
-          path: ${{ env.ANY_APPS_REPO }}
-          title: "Deploy ${PROJECT_NAME} ${{ github.run_id }}"
-          body: "Automated PR to deploy HTML content"
-          branch: ${{ env.PROJECT_NAME }}
-          base: main
+      - name: create pull request
+        working-directory: ${{ env.ANY_APPS_REPO }}
+        run: |
+          gh pr create -B main -H ${PROJECT_NAME} --title "Deploy ${PROJECT_NAME}" --body 'Automated PR to deploy html'
+        env:
+          GITHUB_TOKEN: ${{ secrets.ANY_APPS_HOME_TOKEN }}
+
+          #- name: Create pull request
+          #  uses: peter-evans/create-pull-request@v5
+          #  with:
+          #    token: ${{ secrets.ANY_APPS_HOME_TOKEN }}
+          #    path: ${{ env.ANY_APPS_REPO }}
+          #    title: "Deploy ${PROJECT_NAME} ${{ github.run_id }}"
+          #    body: "Automated PR to deploy HTML content"
+          #    branch: ${{ env.PROJECT_NAME }}
+          #    base: main
