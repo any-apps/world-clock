@@ -34,10 +34,10 @@ jobs:
           mkdir -p ${ANY_APPS_REPO}
           git clone https://x-access-token:${ANY_APPS_HOME_TOKEN}@github.com/${ANY_APPS_HOME_REPO}.git ${ANY_APPS_REPO}
 
-      - name: Copy build directory to home repo
+      - name: Copy build directory to tmp directory
         run: |
-          mkdir -p ${ANY_APPS_HOME_REPO}/public/${PROJECT_NAME}
-          cp -rvf public/* ${ANY_APPS_HOME_REPO}/public/${PROJECT_NAME}
+          mkdir -p /tmp/${PROJECT_NAME}
+          cp -rvf public/* /tmp/${PROJECT_NAME}
 
       - name: Push build to target repo
         working-directory: ${{ env.ANY_APPS_REPO }}
@@ -45,6 +45,7 @@ jobs:
         run: |
           git checkout -b ${PROJECT_NAME}
           git pull origin ${PROJECT_NAME} --force
+          mv -fv /tmp/${PROJECT_NAME} public/
           git add public/${PROJECT_NAME}
           git commit -m "DEPLOY ${PROJECT_NAME} via action"
           git push origin --force ${PROJECT_NAME}
