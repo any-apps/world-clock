@@ -30,7 +30,7 @@ jobs:
       - name: Push build to target repo
         run: |
           mv public ${PROJECT_NAME}
-          mkdir any-apps
+          mkdir -p any-apps
           git clone https://x-access-token:${ANY_APPS_HOME_TOKEN}@github.com/${ANY_APPS_HOME_REPO}.git  any-apps
           rm -vrf any-apps/public/${PROJECT_NAME}
           mv ${PROJECT_NAME} any-apps/public
@@ -46,7 +46,8 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.ANY_APPS_HOME_TOKEN }}
-          repository: ${{ env.ANY_APPS_HOME_REPO }}
+          #repository: ${{ env.ANY_APPS_HOME_REPO }}
+          path: any-apps
           title: "Deploy ${PROJECT_NAME} ${{ github.run_id }}"
           body: "Automated PR to deploy HTML content"
           head: ${{ env.PROJECT_NAME }}
