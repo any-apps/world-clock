@@ -1,0 +1,12 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="64" cy="64" r="60" fill="#2563eb" stroke="#1e40af" stroke-width="6"/>
+  <g opacity="0.15">
+    <ellipse cx="64" cy="64" rx="48" ry="20" fill="#fff"/>
+    <ellipse cx="64" cy="64" rx="20" ry="48" fill="#fff"/>
+  </g>
+  <circle cx="64" cy="64" r="44" fill="#3b82f6"/>
+  <rect x="61" y="32" width="6" height="32" rx="3" fill="#fff"/>
+  <rect x="64" y="64" width="24" height="6" rx="3" fill="#fff" transform="rotate(45 64 64)"/>
+  <circle cx="64" cy="64" r="6" fill="#fff"/>
+  <text x="90" y="110" font-size="28" font-family="Arial, sans-serif" fill="#fff" font-weight="bold">A</text>
+</svg>

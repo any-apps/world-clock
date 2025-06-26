@@ -1,63 +1,338 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="World Clock application showing multiple timezones simultaneously. Track time across different locations with easy timezone management.">
+    <meta name="description"
+        content="World Clock application showing multiple timezones simultaneously. Track time across different locations with easy timezone management.">
+    <meta name="keywords"
+        content="world clock, timezone, time converter, multiple timezones, time tracker, global clock, time zones, online clock">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://any-apps.com/world-clock">
+    <meta property="og:title" content="World Clock - Track Multiple Timezones">
+    <meta property="og:description" content="Track time across different locations with easy timezone management.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://any-apps.com/">
+    <meta property="og:image" content="https://any-apps.com/world-clock/any-app-world-clock.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="World Clock - Track Multiple Timezones">
+    <meta name="twitter:description" content="Track time across different locations with easy timezone management.">
+    <meta name="twitter:image" content="https://any-apps.com/world-clock/any-app-world-clock.png">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <meta name="google-adsense-account" content="ca-pub-7619651561515945">
     <title>World Clock - Track Multiple Timezones</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@1.14.0/dist/full.css" rel="stylesheet">
+    <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
     <style>
-        .clock-card {
-            transition: all 0.3s ease;
+        body {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            background: #f7fafd;
         }
+
+        .clock-card {
+            transition: box-shadow 0.3s, transform 0.3s;
+            border-radius: 1.25rem;
+            background: #fff;
+            box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.06);
+            border: none;
+        }
+
         .clock-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.10);
+        }
+
+        .blue-btn {
+            background: #3b82f6;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 0.75rem;
+            transition: background 0.2s;
+        }
+
+        .blue-btn:hover {
+            background: #2563eb;
+        }
+
+        .input-modern {
+            border-radius: 0.75rem;
+            border: 1.5px solid #e5e7eb;
+            background: #f3f6fa;
+            color: #222;
+            font-size: 1rem;
+            padding: 0.75rem 1rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .input-modern:focus {
+            border-color: #3b82f6;
+        }
+
+        .select-modern {
+            border-radius: 0.75rem;
+            border: 1.5px solid #e5e7eb;
+            background: #f3f6fa;
+            color: #222;
+            font-size: 1rem;
+            padding: 0.75rem 1rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .select-modern:focus {
+            border-color: #3b82f6;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e7ef;
+            border-radius: 6px;
+            margin-top: 1.5rem;
+            overflow: hidden;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+            border-radius: 6px;
+            width: 30%;
+            /* static for now */
+        }
+
+        /* Toggle switch styling */
+        #toggleTimeFormat+#timeFormatSwitch {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: #e5e7eb;
+        }
+
+        #toggleTimeFormat:checked+#timeFormatSwitch {
+            background: #3b82f6;
+        }
+
+        #toggleTimeFormat+#timeFormatSwitch .dot {
+            left: 1px;
+            background: #fff;
+        }
+
+        #toggleTimeFormat:checked+#timeFormatSwitch .dot {
+            transform: translateX(32px);
+            background: #fff;
+        }
+
+        #switch12 {
+            color: #94a3b8;
+        }
+
+        #switch24 {
+            color: #94a3b8;
+        }
+
+        #toggleTimeFormat:checked+#timeFormatSwitch #switch12 {
+            color: #cbd5e1;
+        }
+
+        #toggleTimeFormat:checked+#timeFormatSwitch #switch24 {
+            color: #fff;
+        }
+
+        #toggleTimeFormat:not(:checked)+#timeFormatSwitch #switch12 {
+            color: #fff;
+        }
+
+        #toggleTimeFormat:not(:checked)+#timeFormatSwitch #switch24 {
+            color: #94a3b8;
+        }
+
+        .adsense-layout {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        .adsense-bar {
+            flex: 0 0 64px;
+            min-height: 64px;
+            max-height: 64px;
+        }
+
+        .adsense-middle-row {
+            display: flex;
+            flex: 1 1 auto;
+            min-height: 0;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .adsense-sidebar {
+            flex: 0 0 120px;
+            min-width: 120px;
+            max-width: 120px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .adsense-left {
+            border-right: 1px solid #f3f6fa;
+        }
+
+        .adsense-right {
+            border-left: 1px solid #f3f6fa;
+        }
+
+        .container {
+            max-height: 100%;
+            overflow: hidden;
+        }
+
+        @media (max-width: 1024px) {
+            .adsense-sidebar {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .adsense-bar {
+                display: none !important;
+            }
+        }
+
+        html,
+        body {
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .adsense-bottom {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 100;
+            pointer-events: auto;
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
-    <div class="container mx-auto px-4 py-8">
-        <header class="text-center mb-12">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">World Clock</h1>
-            <p class="text-lg text-gray-600">Track time across different timezones</p>
-        </header>
 
-        <main>
-            <div class="flex flex-col lg:flex-row gap-8">
-                <div class="lg:w-1/3">
-                    <div class="bg-white rounded-lg shadow-md p-6 sticky top-4">
-                        <h2 class="text-xl font-semibold mb-4 text-gray-800">Add New Clock</h2>
-                        <form id="addClockForm" class="space-y-4">
-                            <div>
-                                <label for="timezone" class="block text-sm font-medium text-gray-700 mb-1">Timezone</label>
-                                <select id="timezone" class="select select-bordered w-full">
-                                    <option value="" disabled selected>Select a timezone</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="label" class="block text-sm font-medium text-gray-700 mb-1">Custom Label (optional)</label>
-                                <input type="text" id="label" placeholder="e.g. New York Office" class="input input-bordered w-full">
-                            </div>
-                            <button type="submit" class="btn btn-primary w-full">Add Clock</button>
-                        </form>
-                    </div>
-                </div>
-
-                <div class="lg:w-2/3">
-                    <div id="clocksContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    </div>
+<body class="min-h-screen">
+    <div class="adsense-layout">
+        <div id="adsense-top" class="adsense-bar adsense-top">
+            <div class="adsense-inner"><!---AdSense Top---->
+                <amp-ad width="100vw" height="320" type="adsense" data-ad-client="ca-pub-7619651561515945"
+                    data-ad-slot="2722536064" data-auto-format="rspv" data-full-width="">
+                    <div overflow=""></div>
+                </amp-ad>
+            </div>
+        </div>
+        <div class="adsense-middle-row">
+            <div id="adsense-left" class="adsense-sidebar adsense-left hidden sm:flex">
+                <div class="adsense-inner"><!---AdSense Left---->
+                    <amp-ad width="100vw" height="320" type="adsense" data-ad-client="ca-pub-7619651561515945"
+                        data-ad-slot="4918019215" data-auto-format="mcrspv" data-full-width="">
+                        <div overflow=""></div>
+                    </amp-ad>
                 </div>
             </div>
-        </main>
+            <main class="container mx-auto px-2 sm:px-4 py-4 sm:py-8 pb-20 flex-1 min-w-0 flex flex-col"
+                id="main-content">
+                <header class="text-center mb-10" role="banner">
+                    <h1 class="text-5xl font-extrabold text-gray-900 mb-2 tracking-tight">World Clock</h1>
+                    <p class="text-lg text-gray-500">Track time across different timezones</p>
+                </header>
+                <section aria-label="World Clock Controls and Clocks"
+                    class="flex flex-col lg:flex-row gap-4 sm:gap-8 flex-1">
+                    <aside class="w-full lg:w-1/3 flex-shrink-0 mb-4 lg:mb-0" aria-label="Add New Clock">
+                        <div class="bg-white rounded-2xl shadow-lg p-4 sm:p-8 w-full max-w-md mx-auto lg:mx-0">
+                            <h2 class="text-2xl font-bold mb-6 text-gray-900">Add New Clock</h2>
+                            <form id="addClockForm" class="space-y-5" autocomplete="off">
+                                <div>
+                                    <label for="timezone"
+                                        class="block text-base font-medium text-gray-700 mb-2">Timezone</label>
+                                    <select id="timezone" class="select-modern w-full" aria-label="Select a timezone">
+                                        <option value="" disabled selected>Select a timezone</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="label" class="block text-base font-medium text-gray-700 mb-2">Custom
+                                        Label (optional)</label>
+                                    <input type="text" id="label" placeholder="e.g. New York Office"
+                                        class="input-modern w-full" aria-label="Custom Label">
+                                </div>
+                                <button type="submit" class="blue-btn w-full py-3 text-lg">Add Clock</button>
+                            </form>
+                        </div>
+                    </aside>
+                    <section class="w-full lg:w-2/3 flex flex-col" aria-label="Clocks">
+                        <div class="flex justify-end items-center mb-2 sm:mb-4">
+                            <label for="toggleTimeFormat" class="flex items-center cursor-pointer select-none">
+                                <span class="mr-2 text-gray-500 font-medium">AM/PM</span>
+                                <input type="checkbox" id="toggleTimeFormat" class="hidden">
+                                <span id="timeFormatSwitch"
+                                    class="relative w-16 h-8 flex items-center bg-gray-200 rounded-full px-1 transition-colors duration-200">
+                                    <span id="switch12"
+                                        class="z-10 text-xs font-bold transition-colors duration-200">12</span>
+                                    <span id="switch24"
+                                        class="z-10 text-xs font-bold ml-auto transition-colors duration-200">24</span>
+                                    <span
+                                        class="dot absolute top-1 left-1 bg-white w-6 h-6 rounded-full shadow-md transition-transform duration-200"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <div id="clocksContainer"
+                            class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 xl:gap-8 flex-1">
+                        </div>
+                    </section>
+                </section>
+                <footer class="mt-16 text-center text-gray-400 text-base" role="contentinfo">
+                    <p>World Clock App – Track multiple timezones simultaneously</p>
+                    <p class="mt-1">© <span id="currentYear"></span> All Rights Reserved</p>
+                </footer>
+            </main>
+            <div id="adsense-right" class="adsense-sidebar adsense-right hidden sm:flex">
+                <div class="adsense-inner"><!---AdSense Right---->
+                    <amp-ad width="100vw" height="320" type="adsense" data-ad-client="ca-pub-7619651561515945"
+                        data-ad-slot="1409454393" data-auto-format="mcrspv" data-full-width="">
+                        <div overflow=""></div>
+                    </amp-ad>
+                </div>
+            </div>
+        </div>
+        <div id="adsense-bottom" class="adsense-bar adsense-bottom">
+            <div class="adsense-inner"><!---AdSense Bottom---->
+                <amp-ad width="100vw" height="320" type="adsense" data-ad-client="ca-pub-7619651561515945"
+                    data-ad-slot="3604937545" data-auto-format="mcrspv" data-full-width="">
+                    <div overflow=""></div>
+                </amp-ad>
 
-        <footer class="mt-16 text-center text-gray-500 text-sm">
-            <p>World Clock App - Track multiple timezones simultaneously</p>
-            <p class="mt-1">© <span id="currentYear"></span> All Rights Reserved</p>
-        </footer>
+            </div>
+        </div>
     </div>
-
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "World Clock App",
+      "url": "https://any-apps.com/",
+      "description": "Track time across different locations with easy timezone management.",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
     <script src="app.js"></script>
 </body>
+
 </html>

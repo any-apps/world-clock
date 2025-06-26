@@ -3,7 +3,7 @@ name: Build and Deploy HTML
 on:
   push:
     branches:
-      - any-apps
+      - world-clock
 
 jobs:
   build-deploy:
@@ -37,11 +37,11 @@ jobs:
           mv ${PROJECT_NAME} any-apps/public
           cd any-apps
 
-          git checkout -b ${{ steps.set_branch.outputs.branch }}
+          git checkout -b ${PROJECT_NAME}
           git add public/${PROJECT_NAME}
 
           git commit -m "DEPLOY ${PROJECT_NAME} via action"
-          git push origin ${{ steps.set_branch.outputs.branch }}
+          git push origin --force ${PROJECT_NAME}
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v5
@@ -50,5 +50,5 @@ jobs:
           repository: ${{ env.ANY_APPS_HOME_REPO }}
           title: "Deploy ${PROJECT_NAME} ${{ github.run_id }}"
           body: "Automated PR to deploy HTML content"
-          head: ${{ steps.set_branch.outputs.branch }}
+          head: ${{ env.PROJECT_NAME }}
           base: ${{ env.TARGET_BRANCH }}
