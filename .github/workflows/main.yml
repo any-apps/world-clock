@@ -28,16 +28,21 @@ jobs:
           git config --global user.name "${PROJECT_NAME} github-actions[bot]"
           git config --global user.email "${PROJECT_NAME} github-actions[bot]@users.noreply.github.com"
 
-      - name: Push build to target repo
+      - name: Clone home repo
         run: |
-          # clone any-apps repository
           rm -rf ${ANY_APPS_REPO}
           mkdir -p ${ANY_APPS_REPO}
           git clone https://x-access-token:${ANY_APPS_HOME_TOKEN}@github.com/${ANY_APPS_HOME_REPO}.git ${ANY_APPS_REPO}
+
+      - name: Copy build directory to home repo
+        run: |
           mkdir -p ${ANY_APPS_HOME_REPO}/public/${PROJECT_NAME}
           cp -rvf public/* ${ANY_APPS_HOME_REPO}/public/${PROJECT_NAME}
 
-          cd ${ANY_APPS_REPO}
+      - name: Push build to target repo
+        working-directory: ${{ env.ANY_APPS_REPO }}
+        continue-on-error: true
+        run: |
           git checkout -b ${PROJECT_NAME}
           git pull origin ${PROJECT_NAME} --force
           git add public/${PROJECT_NAME}
