@@ -13,6 +13,7 @@ jobs:
       ANY_APPS_HOME_REPO: ${{ secrets.ANY_APPS_HOME_REPO }}
       ANY_APPS_HOME_TOKEN: ${{ secrets.ANY_APPS_HOME_TOKEN }}
       PROJECT_NAME: world-clock
+      BRANCH_NAME: ${{ github.ref_name }}
       ANY_APPS_REPO: /tmp/any-apps
 
     steps:
@@ -43,18 +44,18 @@ jobs:
         working-directory: ${{ env.ANY_APPS_REPO }}
         continue-on-error: true
         run: |
-          git checkout -b ${PROJECT_NAME}
-          git pull origin ${PROJECT_NAME} --force
+          git checkout -b ${BRANCH_NAME}
+          git pull origin ${BRANCH_NAME} --force
           rm -rfv public/${PROJECT_NAME}
           mv -fv /tmp/${PROJECT_NAME} public/
           git add public/${PROJECT_NAME}
-          git commit -m "DEPLOY ${PROJECT_NAME} via action"
-          git push origin --force ${PROJECT_NAME}
+          git commit -m "DEPLOY ${BRANCH_NAME} via action"
+          git push origin --force ${BRANCH_NAME}
 
       - name: create pull request
         working-directory: ${{ env.ANY_APPS_REPO }}
         run: |
-          gh pr create -B main -H ${PROJECT_NAME} --title "Deploy ${PROJECT_NAME}" --body 'Automated PR to deploy html'
+          gh pr create -B main -H ${BRANCH_NAME} --title "Deploy ${BRANCH_NAME}" --body 'Automated PR to deploy html'
         env:
           GITHUB_TOKEN: ${{ secrets.ANY_APPS_HOME_TOKEN }}
 
