@@ -1,0 +1,38 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# Logs
+*.log
+
+# Editor directories and files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Node/npm (if ever used)
+node_modules/
+
+# Build output (if any)
+dist/
+build/
+
+# Generated images/icons
+public/favicon.ico
+public/favicon.png
+public/favicon-*.png
+public/icon-*.png
+public/og-image.png
+
+# Local environment
+.env
+.env.* 
