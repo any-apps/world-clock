@@ -3,7 +3,7 @@ name: Build and Deploy HTML
 on:
   push:
     branches:
-      - any-apps
+      - world-clock
 
 jobs:
   build-deploy:
