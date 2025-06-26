@@ -2,8 +2,8 @@ name: Build and Deploy HTML
 
 on:
   push:
-    branches:
-      - world-clock
+    tags:
+      - "v*"
 
 jobs:
   build-deploy:
@@ -22,15 +22,13 @@ jobs:
         run: |
           echo "It should run something to build"
 
-      - name: Set deployment branch name
-        id: set_branch
-        run: echo "branch=${{ env.PROJECT_NAME }}${{ github.run_id }}" >> $GITHUB_OUTPUT
-
-      - name: Push build to target repo
+      - name: Set git configuration
         run: |
           git config --global user.name "${PROJECT_NAME} github-actions[bot]"
           git config --global user.email "${PROJECT_NAME} github-actions[bot]@users.noreply.github.com"
 
+      - name: Push build to target repo
+        run: |
           mv public ${PROJECT_NAME}
           mkdir any-apps
           git clone https://x-access-token:${ANY_APPS_HOME_TOKEN}@github.com/${ANY_APPS_HOME_REPO}.git  any-apps
