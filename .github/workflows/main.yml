@@ -13,7 +13,7 @@ jobs:
       ANY_APPS_HOME_REPO: ${{ secrets.ANY_APPS_HOME_REPO }}
       ANY_APPS_HOME_TOKEN: ${{ secrets.ANY_APPS_HOME_TOKEN }}
       PROJECT_NAME: world-clock
-      ANY_APP_REPO: /tmp/any-apps
+      ANY_APPS_REPO: /tmp/any-apps
 
     steps:
       - name: Checkout source repo
