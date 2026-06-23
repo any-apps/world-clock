@@ -7,6 +7,7 @@ const timezones = [
     { value: 'America/Denver', label: '(GMT-07:00) Mountain Time (US & Canada)' },
     { value: 'America/Chicago', label: '(GMT-06:00) Central Time (US & Canada)' },
     { value: 'America/New_York', label: '(GMT-05:00) Eastern Time (US & Canada)' },
+    { value: 'EST', label: '(GMT-05:00) EST' },
     { value: 'America/Halifax', label: '(GMT-04:00) Atlantic Time (Canada)' },
     { value: 'America/St_Johns', label: '(GMT-03:30) Newfoundland' },
     { value: 'America/Sao_Paulo', label: '(GMT-03:00) Brasilia' },
